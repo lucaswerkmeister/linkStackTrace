@@ -1,11 +1,22 @@
 function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
     var ret = "";
+    var notFound = {};
+    var ambiguous = {};
+    var cache = {}; // used to cache found files. key: before (see below), value: match.html_url (see further below) or notFound or ambiguous
     stackTrace.split('\n').forEach(function(line) {
         var parsedLine = /(.*)\((.*):(\d*)\)/.exec(line);
         if(parsedLine != null && typeof(parsedLine[1] == "string") && typeof(parsedLine[2] == "string") && typeof(parsedLine[3] == "string")) {
             var before = parsedLine[1];
             var filename = parsedLine[2];
             var linenum = parsedLine[3];
+            if(before in cache) {
+                if(typeof(cache[before]) === "string") {
+                    ret += before + "([" + filename + ":" + linenum + "](" + cache[before] + "#L" + linenum + "))\n";
+                } else {
+                    ret += line + '\n';
+                }
+                return;
+            }
             var req = new XMLHttpRequest();
             var userRepo;
             if(userOrRepo.contains('/'))
@@ -23,10 +34,12 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                         if(response.total_count === 0) {
                             console.log("file " + filename + " not found");
                             ret += line + '\n';
+                            cache[before] = notFound;
                             return;
                         } else if(response.total_count > 1) {
                             console.log("file " + filename + " ambiguous");
                             ret += line + '\n';
+                            cache[before] = ambiguous;
                             return;
                         }
                         // exactly one match
@@ -36,6 +49,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                             ret += line + '\n';
                             return;
                         }
+                        cache[before] = match.html_url;
                         ret += before + "([" + filename + ":" + linenum + "](" + match.html_url + "#L" + linenum + "))\n";
                     } else {
                         console.error(req.statusText);

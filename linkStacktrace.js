@@ -1,4 +1,4 @@
-function linkStacktrace(oauthToken, stackTrace, repo) {
+function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
     var ret = "";
     stackTrace.split('\n').forEach(function(line) {
         var parsedLine = /(.*)\((.*):(\d*)\)/.exec(line);
@@ -7,9 +7,14 @@ function linkStacktrace(oauthToken, stackTrace, repo) {
             var filename = parsedLine[2];
             var linenum = parsedLine[3];
             var req = new XMLHttpRequest();
+            var userRepo;
+            if(userOrRepo.contains('/'))
+                userRepo = "repo:" + userOrRepo;
+            else
+                userRepo = "user:" + userOrRepo;
             req.open("GET", "https://api.github.com/search/code?" + 
                 "access_token=" + oauthToken +
-                "q=" + filename + "+in:path+repo:" + repo + 
+                "q=" + filename + "+in:path+" + userRepo + 
                 "&per_page=2", true);
             req.onload = function(e) {
                 if (req.readyState === 4) {

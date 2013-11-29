@@ -47,4 +47,5 @@ function linkStacktrace(oauthToken, stackTrace, repo) {
             ret += line + '\n';
         }
     });
+    return ret;
 }

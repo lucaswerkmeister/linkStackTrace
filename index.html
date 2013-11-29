@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8"/>
   <title>linkStacktrace</title>
+  <script src="linkStacktrace.js"></script>
 </head>
 <body>
   <p>
     Hi! linkStacktrace will go through a Java stacktrace, search for files in a Github repository and add links to the stacktrace.
   </p>
-  <p>
-    In order to make the necessary search requests through the Github API, we’ll need to authenticate with your credentials.
-    But don’t worry! We don’t need your credentials directly; if you click the link below, Github will give us an OAuth access token.
-    We can’t do anything harmful to your profile with this token – it’s only used to make the requests to the Github API.
-  </p>
-  <?php
-     include("./config.php");
-     $link = "https://github.com/login/oauth/authorize?client_id=" . CLIENT_ID;
-     echo "<a href=\"$link\">Clicky here!</a>";
-  ?>
+  <form name="mainForm" onSubmit=
+        "document.mainForm.elements['Stacktrace'].value = linkStacktrace('5450665e1ee6e2894c5accb47b4488546931a6d4', document.mainForm.elements['Stacktrace'].value, document.mainForm.elements['UserRepo'].value); return false;">
+    <textarea name="Stacktrace" placeholder="Enter the stacktrace here"></textarea>
+    <input name="UserRepo" type="text" placeholder="user OR user/repo"/>
+    <input name="Submit" type="submit" value="Submit"/>
+  </form>
 </body>
 </html>

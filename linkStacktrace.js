@@ -40,6 +40,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                     } else {
                         console.error(req.statusText);
                         console.error(req.responseText);
+                        ret += line + '\n';
                     }
                 }
             };

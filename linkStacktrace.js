@@ -24,9 +24,9 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
             else
                 userRepo = "user:" + userOrRepo;
             req.open("GET", "https://api.github.com/search/code?" + 
-                "access_token=" + oauthToken +
-                "q=" + filename + "+in:path+" + userRepo + 
-                "&per_page=2", false);
+                "access_token=" + oauthToken + "&" +
+                "q=" + filename + "+in:path+" + userRepo + "&" +
+                "per_page=2", false);
             req.onload = function(e) {
                 if (req.readyState === 4) {
                     if (req.status === 200) {

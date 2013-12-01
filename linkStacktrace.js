@@ -44,7 +44,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                         }
                         // exactly one match
                         var match = response.items[0];
-                        if(match.name != file) {
+                        if(match.name != filename) {
                             console.log("file name " + match.name + " doesn’t match expected file name " + filename);
                             ret += line + '\n';
                             return;

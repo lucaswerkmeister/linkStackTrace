@@ -19,7 +19,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
             }
             var req = new XMLHttpRequest();
             var userRepo;
-            if(userOrRepo.contains('/'))
+            if(userOrRepo.indexOf('/') != -1) // userOrRepo.contains('/')
                 userRepo = "repo:" + userOrRepo;
             else
                 userRepo = "user:" + userOrRepo;

@@ -9,11 +9,8 @@
   <p>
     Hi! linkStacktrace will go through a Java stacktrace, search for files in a Github repository and add links to the stacktrace.
   </p>
-  <form name="mainForm" onSubmit=
-        "document.mainForm.elements['Stacktrace'].value = linkStacktrace('5450665e1ee6e2894c5accb47b4488546931a6d4', document.mainForm.elements['Stacktrace'].value, document.mainForm.elements['UserRepo'].value); return false;">
-    <textarea name="Stacktrace" placeholder="Enter the stacktrace here"></textarea>
-    <input name="UserRepo" type="text" placeholder="user OR user/repo"/>
-    <input name="Submit" type="submit" value="Submit"/>
-  </form>
-</body>
+  <textarea id="stacktrace" placeholder="Enter the stacktrace here" rows="32" cols="120"></textarea>
+  <input id="userRepo" type="text" placeholder="user OR user/repo"/>
+  <input id="submit" type="submit" value="Submit" onclick="document.getElementById('stacktrace').value = linkStacktrace('5450665e1ee6e2894c5accb47b4488546931a6d4', document.getElementById('stacktrace').value, document.getElementById('userRepo').value); return false;"/>
+  </body>
 </html>

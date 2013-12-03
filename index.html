@@ -10,7 +10,7 @@
         var userRepo = document.getElementById('userRepo').value;
         if(userRepo.length == 0) {
             alert("You need to enter a user or repository in the user/repository field!");
-        } else if(userRepo.split('/').length > 1) {
+        } else if(userRepo.split('/').length > 2) {
             alert("Can’t parse user or repo – must have at most one slash ('/')!");
         } else {
             document.getElementById('stacktrace').value = linkStacktrace(token, stacktrace, userRepo);

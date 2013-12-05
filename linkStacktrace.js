@@ -9,9 +9,10 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
             var before = parsedLine[1];
             var filename = parsedLine[2];
             var linenum = parsedLine[3];
-            if(before in cache) {
-                if(typeof(cache[before]) === "string") {
-                    ret += before + "([" + filename + ":" + linenum + "](" + cache[before] + "#L" + linenum + "))\n";
+            var compilationUnit = /[a-z]\w*(?:\.[a-z]\w*)*\.[a-zA-Z]\w*/.exec(before)[0];
+            if(compilationUnit in cache) {
+                if(typeof(cache[compilationUnit]) === "string") {
+                    ret += before + "([" + filename + ":" + linenum + "](" + cache[compilationUnit] + "#L" + linenum + "))\n";
                 } else {
                     ret += line + '\n';
                 }
@@ -34,12 +35,12 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                         if(response.total_count === 0) {
                             console.log("file " + filename + " not found");
                             ret += line + '\n';
-                            cache[before] = notFound;
+                            cache[compilationUnit] = notFound;
                             return;
                         } else if(response.total_count > 1) {
                             console.log("file " + filename + " ambiguous");
                             ret += line + '\n';
-                            cache[before] = ambiguous;
+                            cache[compilationUnit] = ambiguous;
                             return;
                         }
                         // exactly one match
@@ -49,7 +50,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                             ret += line + '\n';
                             return;
                         }
-                        cache[before] = match.html_url;
+                        cache[compilationUnit] = match.html_url;
                         ret += before + "([" + filename + ":" + linenum + "](" + match.html_url + "#L" + linenum + "))\n";
                     } else {
                         console.error(req.statusText);

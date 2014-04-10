@@ -16,6 +16,11 @@
             document.getElementById('stacktrace').value = linkStacktrace(token, stacktrace, userRepo);
         }
     }
+    function onKeypress(e) {
+        var code = e.keyCode || e.which;
+        if (code == '13')
+            onSubmit();
+    }
   </script>
   <title>linkStacktrace</title>
 </head>
@@ -24,7 +29,7 @@
     Hi! linkStacktrace will go through a Java stacktrace, search for files in a Github repository and add links to the stacktrace.
   </p>
   <textarea id="stacktrace" placeholder="Enter the stacktrace here" rows="32" cols="120"></textarea>
-  <input id="userRepo" type="text" placeholder="user OR user/repo"/>
+  <input id="userRepo" type="text" placeholder="user OR user/repo" onkeypress="onKeypress(event);"/>
   <input id="submit" type="submit" value="Submit" onclick="onSubmit(); return false"/>
   </body>
 </html>

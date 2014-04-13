@@ -6,14 +6,16 @@
   <script type="text/javascript">
     var token = "5450665e1ee6e2894c5accb47b4488546931a6d4";
     function onSubmit() {
-        var stacktrace = document.getElementById('stacktrace').value;
+        var stacktraceInput = document.getElementById('stacktrace');
+        var stacktrace = stacktraceInput.value;
         var userRepo = document.getElementById('userRepo').value;
         if(userRepo.length == 0) {
             alert("You need to enter a user or repository in the user/repository field!");
         } else if(userRepo.split('/').length > 2) {
             alert("Can’t parse user or repo – must have at most one slash ('/')!");
         } else {
-            document.getElementById('stacktrace').value = linkStacktrace(token, stacktrace, userRepo);
+            stacktraceInput.value = "working…";
+            stacktraceInput.value = linkStacktrace(token, stacktrace, userRepo);
         }
     }
     function onKeypress(e) {

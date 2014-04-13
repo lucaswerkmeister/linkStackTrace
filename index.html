@@ -29,13 +29,16 @@
 </head>
 <body>
   <div class="container">
-    <p>
-      linkStacktrace will go through a Java stacktrace, search for files in a Github repository and add Markdown links to the stacktrace.
-    </p>
+    <div class="page-header">
+      <h1>linkStacktrace <small>for better bug reports</small></h1>
+      <p>
+        linkStacktrace will go through a Java stacktrace, search for files in a Github repository and add Markdown links to the stacktrace.
+      </p>
+    </div>
     <form id="mainForm" role="form">
       <div class="form-group">
         <label for="stacktrace">Stacktrace</label>
-        <textarea id="stacktrace" class="form-control" placeholder="Enter the stacktrace here" rows="32"></textarea>
+        <textarea id="stacktrace" class="form-control" placeholder="Enter the stacktrace here" rows="16"></textarea>
       </div>
       <div class="form-group">
         <label for="userRepo">User or repository</label>

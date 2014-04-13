@@ -30,8 +30,10 @@
   <p>
     Hi! linkStacktrace will go through a Java stacktrace, search for files in a Github repository and add links to the stacktrace.
   </p>
-  <textarea id="stacktrace" placeholder="Enter the stacktrace here" rows="32" cols="120"></textarea>
-  <input id="userRepo" type="text" placeholder="user OR user/repo" onkeypress="onKeypress(event);"/>
-  <input id="submit" type="submit" value="Submit" onclick="onSubmit(); return false"/>
-  </body>
+  <form id="mainForm" role="form">
+    <textarea id="stacktrace" placeholder="Enter the stacktrace here" rows="32" cols="120"></textarea>
+    <input id="userRepo" type="text" placeholder="user OR user/repo" onkeypress="onKeypress(event);"/>
+    <button id="submit" type="submit" onclick="onSubmit(); return false">Submit</button>
+  </form>
+</body>
 </html>

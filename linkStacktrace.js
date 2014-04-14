@@ -56,7 +56,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                         cache[compilationUnit] = match.html_url;
                         ret += before + "([" + filename + ":" + linenum + "](" + match.html_url + "#L" + linenum + "))\n";
                     } else {
-                        console.error(req.statusText);
+                        console.error(req.status + ": " + req.statusText);
                         console.error(req.responseText);
                         ret += line + '\n';
                     }

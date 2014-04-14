@@ -2,7 +2,8 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
     var ret = "";
     var notFound = {};
     var ambiguous = {};
-    var cache = {}; // used to cache found files. key: before (see below), value: match.html_url (see further below) or notFound or ambiguous
+    var nameMismatch = {};
+    var cache = {}; // used to cache found files. key: before (see below), value: match.html_url (see further below) or notFound or ambiguous or nameMismatch
     stackTrace.split('\n').forEach(function(line) {
         var parsedLine = /(.*)\((.*):(\d*)\)/.exec(line);
         if(parsedLine != null && typeof(parsedLine[1] == "string") && typeof(parsedLine[2] == "string") && typeof(parsedLine[3] == "string")) {
@@ -49,6 +50,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                         if(match.name != filename) {
                             console.log("file name " + match.name + " doesn’t match expected file name " + filename);
                             ret += line + '\n';
+                            cache[compilationUnit] = nameMismatch;
                             return;
                         }
                         cache[compilationUnit] = match.html_url;

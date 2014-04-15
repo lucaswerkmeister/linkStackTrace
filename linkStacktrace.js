@@ -29,7 +29,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                 "access_token=" + oauthToken + "&" +
                 "q=" + filename + "+in:path+" + userRepo + "&" +
                 "per_page=2", false);
-            req.setRequestHeader("Accept", "application/vnd.github.beta+json");
+            req.setRequestHeader("Accept", "application/vnd.github.v3+json");
             req.onload = function(e) {
                 if (req.readyState === 4) {
                     if (req.status === 200) {

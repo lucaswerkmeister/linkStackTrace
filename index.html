@@ -12,14 +12,18 @@
     function onSubmit() {
         var stacktraceInput = document.getElementById('stacktrace');
         var stacktrace = stacktraceInput.value;
-        var userRepo = document.getElementById('userRepo').value;
+        var userRepoInput = document.getElementById('userRepo');
+        var userRepo = userRepoInput.value;
         if(userRepo.length == 0) {
             alert("You need to enter a user or repository in the user/repository field!");
         } else if(userRepo.split('/').length > 2) {
             alert("Can’t parse user or repo – must have at most one slash ('/')!");
         } else {
-            stacktraceInput.value = "working…";
+            stacktraceInput.disabled = true;
+            userRepoInput.disabled = true;
             stacktraceInput.value = linkStacktrace(token, stacktrace, userRepo);
+            stacktraceInput.disabled = false;
+            userRepoInput.disabled = false;
             stacktraceInput.select();
         }
     }

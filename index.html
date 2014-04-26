@@ -8,12 +8,12 @@
   <meta name="keywords" content="linkStacktrace,stacktrace,java,markdown"/>
   <script src="./linkStacktrace.js" type="text/javascript"></script>
   <script type="text/javascript">
-    var token = "5450665e1ee6e2894c5accb47b4488546931a6d4";
     function onSubmit() {
         var stacktraceInput = document.getElementById('stacktrace');
         var stacktrace = stacktraceInput.value;
         var userRepoInput = document.getElementById('userRepo');
         var userRepo = userRepoInput.value;
+        var token = document.getElementById('authToken').value;
         if(userRepo.length == 0) {
             alert("You need to enter a user or repository in the user/repository field!");
         } else if(userRepo.split('/').length > 2) {
@@ -21,9 +21,16 @@
         } else {
             stacktraceInput.disabled = true;
             userRepoInput.disabled = true;
-            stacktraceInput.value = linkStacktrace(token, stacktrace, userRepo).result;
+            var list = document.getElementById('rateLimitError').classList;
+            list.add('hidden');
+            var ret = linkStacktrace(token, stacktrace, userRepo);
+            stacktraceInput.value = ret.result;
             stacktraceInput.disabled = false;
             userRepoInput.disabled = false;
+            if(ret.rateLimitReset !== null) {
+                list.remove('hidden');
+                document.getElementById('rateLimitReset').textContent = ret.rateLimitReset.toLocaleTimeString();
+            }
             stacktraceInput.select();
         }
     }
@@ -69,6 +76,11 @@
       <div class="form-group" id="userRepoGroup">
         <label for="userRepo">User or repository</label>
         <input id="userRepo" class="form-control" type="text" placeholder="user OR user/repo" onkeypress="onKeypress(event);" onkeyup="validateUserRepo();"/>
+      </div>
+      <div class="form-group bg-danger hidden" id="rateLimitError">
+        <p>GitHub API rate limit exceeded! You’ll need a token of your own (get it <a href="https://github.com/settings/tokens/new">here</a>) or try again when the rate limit resets (at <span id="rateLimitReset">PLACEHOLDER</span>).</p>
+        <label for="authToken">Alternative auth token</label>
+        <input id="authToken" class="form-control" onkeypress="onKeypress(event);" value="5450665e1ee6e2894c5accb47b4488546931a6d4" type="text">
       </div>
       <button id="submit" class="form-control btn btn-primary" type="submit" onclick="onSubmit(); return false">Submit</button>
     </form>

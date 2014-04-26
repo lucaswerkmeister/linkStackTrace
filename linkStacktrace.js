@@ -1,7 +1,8 @@
 /*
  * return value:
  * {
- *   result: <the linked stacktrace>
+ *   result: <the linked stacktrace>,
+ *   rateLimitReset: <a Date object representing when the GitHub API rate limit will reset, or null if the limit wasn’t hit>
  *   // possibly more in the future
  * }
  */
@@ -11,9 +12,10 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
     var ambiguous = {};
     var nameMismatch = {};
     var cache = {}; // used to cache found files. key: before (see below), value: match.html_url (see further below) or notFound or ambiguous or nameMismatch
+    var rateLimitReset = null; // null = didn’t hit limit
     stackTrace.split('\n').forEach(function(line) {
         var parsedLine = /(.*)\((.*):(\d*)\)/.exec(line);
-        if(parsedLine != null && typeof(parsedLine[1] == "string") && typeof(parsedLine[2] == "string") && typeof(parsedLine[3] == "string")) {
+        if(parsedLine != null && typeof(parsedLine[1] == "string") && typeof(parsedLine[2] == "string") && typeof(parsedLine[3] == "string") && rateLimitReset === null) {
             var before = parsedLine[1];
             var filename = parsedLine[2];
             var linenum = parsedLine[3];
@@ -62,6 +64,11 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                         }
                         cache[compilationUnit] = match.html_url;
                         ret += before + "([" + filename + ":" + linenum + "](" + match.html_url + "#L" + linenum + "))\n";
+                    } else if (req.status === 403) {
+                        // rate limit hit
+                        console.error("Rate limit hit!");
+                        ret += line + '\n'
+                        rateLimitReset = new Date(req.getResponseHeader("X-RateLimit-Reset") * 1000);
                     } else {
                         console.error(req.status + ": " + req.statusText);
                         console.error(req.responseText);
@@ -83,6 +90,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
         ret += footer;
     ret = ret.slice(0, -1); // remove last newline
     return {
-        result: ret
+        result: ret,
+        rateLimitReset: rateLimitReset
     };
 }

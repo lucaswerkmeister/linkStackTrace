@@ -21,7 +21,7 @@
         } else {
             stacktraceInput.disabled = true;
             userRepoInput.disabled = true;
-            stacktraceInput.value = linkStacktrace(token, stacktrace, userRepo);
+            stacktraceInput.value = linkStacktrace(token, stacktrace, userRepo).result;
             stacktraceInput.disabled = false;
             userRepoInput.disabled = false;
             stacktraceInput.select();

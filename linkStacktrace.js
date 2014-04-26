@@ -1,3 +1,10 @@
+/*
+ * return value:
+ * {
+ *   result: <the linked stacktrace>
+ *   // possibly more in the future
+ * }
+ */
 function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
     var ret = "";
     var notFound = {};
@@ -75,5 +82,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
     if (ret.indexOf(footer) == -1)
         ret += footer;
     ret = ret.slice(0, -1); // remove last newline
-    return ret;
+    return {
+        result: ret
+    };
 }

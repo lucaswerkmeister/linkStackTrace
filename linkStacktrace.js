@@ -15,7 +15,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
     var rateLimitReset = null; // null = didn’t hit limit
     stackTrace.split('\n').forEach(function(line) {
         var parsedLine = /(.*)\((.*):(\d*)\)/.exec(line);
-        if(parsedLine != null && typeof(parsedLine[1] == "string") && typeof(parsedLine[2] == "string") && typeof(parsedLine[3] == "string") && rateLimitReset === null) {
+        if(parsedLine != null && typeof(parsedLine[1] == "string") && typeof(parsedLine[2] == "string") && typeof(parsedLine[3] == "string")) {
             var before = parsedLine[1];
             var filename = parsedLine[2];
             var linenum = parsedLine[3];
@@ -26,6 +26,9 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                 } else {
                     ret += line + '\n';
                 }
+                return;
+            }
+            if(rateLimitReset !== null) {
                 return;
             }
             var req = new XMLHttpRequest();

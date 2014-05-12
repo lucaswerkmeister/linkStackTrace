@@ -52,10 +52,19 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                             cache[compilationUnit] = notFound;
                             return;
                         } else if(response.total_count > 1) {
-                            console.log("file " + filename + " ambiguous");
-                            ret += line + '\n';
-                            cache[compilationUnit] = ambiguous;
-                            return;
+                            if(response.items[0].name == filename && response.items[1].name != filename) {
+                                // looks ambiguous, but actually isn’t:
+                                // the first match is what we want, and the second match is “valid” for GitHub
+                                // (for example, .../metamodel/Predicates.java matched Metamojel.java)
+                                // but we can drop it.
+                                console.log("file " + filename + " yielded several results, but is still unambiguous");
+                                // skip the return
+                            } else {
+                                console.log("file " + filename + " ambiguous between '" + response.items[0].path + "', '" + response.items[1].path + "' and possibly more");
+                                ret += line + '\n';
+                                cache[compilationUnit] = ambiguous;
+                                return;
+                            }
                         }
                         // exactly one match
                         var match = response.items[0];

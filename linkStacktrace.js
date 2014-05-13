@@ -14,7 +14,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
     var cache = {}; // used to cache found files. key: filename (see below), value: match.html_url (see further below) or notFound or ambiguous or nameMismatch
     var rateLimitReset = null; // null = didn’t hit limit
     stackTrace.split('\n').forEach(function(line) {
-        var parsedLine = /(.*)\((.*):(\d*)\)/.exec(line);
+        var parsedLine = /^(.*)\((.*):(\d*)\)$/.exec(line);
         if(parsedLine != null && typeof(parsedLine[1] == "string") && typeof(parsedLine[2] == "string") && typeof(parsedLine[3] == "string")) {
             var before = parsedLine[1];
             var filename = parsedLine[2];

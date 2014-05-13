@@ -11,7 +11,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
     var notFound = {};
     var ambiguous = {};
     var nameMismatch = {};
-    var cache = {}; // used to cache found files. key: before (see below), value: match.html_url (see further below) or notFound or ambiguous or nameMismatch
+    var cache = {}; // used to cache found files. key: filename (see below), value: match.html_url (see further below) or notFound or ambiguous or nameMismatch
     var rateLimitReset = null; // null = didn’t hit limit
     stackTrace.split('\n').forEach(function(line) {
         var parsedLine = /(.*)\((.*):(\d*)\)/.exec(line);
@@ -19,10 +19,9 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
             var before = parsedLine[1];
             var filename = parsedLine[2];
             var linenum = parsedLine[3];
-            var compilationUnit = /[a-z]\w*(?:\.[a-z]\w*)*\.[a-zA-Z]\w*/.exec(before)[0];
-            if(compilationUnit in cache) {
-                if(typeof(cache[compilationUnit]) === "string") {
-                    ret += before + "([" + filename + ":" + linenum + "](" + cache[compilationUnit] + "#L" + linenum + "))\n";
+            if(filename in cache) {
+                if(typeof(cache[filename]) === "string") {
+                    ret += before + "([" + filename + ":" + linenum + "](" + cache[filename] + "#L" + linenum + "))\n";
                 } else {
                     ret += line + '\n';
                 }
@@ -49,7 +48,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                         if(response.total_count === 0) {
                             console.log("file " + filename + " not found");
                             ret += line + '\n';
-                            cache[compilationUnit] = notFound;
+                            cache[filename] = notFound;
                             return;
                         } else if(response.total_count > 1) {
                             if(response.items[0].name == filename && response.items[1].name != filename) {
@@ -62,7 +61,7 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                             } else {
                                 console.log("file " + filename + " ambiguous between '" + response.items[0].path + "', '" + response.items[1].path + "' and possibly more");
                                 ret += line + '\n';
-                                cache[compilationUnit] = ambiguous;
+                                cache[filename] = ambiguous;
                                 return;
                             }
                         }
@@ -71,10 +70,10 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
                         if(match.name != filename) {
                             console.log("file name " + match.name + " doesn’t match expected file name " + filename);
                             ret += line + '\n';
-                            cache[compilationUnit] = nameMismatch;
+                            cache[filename] = nameMismatch;
                             return;
                         }
-                        cache[compilationUnit] = match.html_url;
+                        cache[filename] = match.html_url;
                         ret += before + "([" + filename + ":" + linenum + "](" + match.html_url + "#L" + linenum + "))\n";
                     } else if (req.status === 403) {
                         // rate limit hit

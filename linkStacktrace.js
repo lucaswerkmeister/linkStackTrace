@@ -1,12 +1,4 @@
-/*
- * return value:
- * {
- *   result: <the linked stacktrace>,
- *   rateLimitReset: <a Date object representing when the GitHub API rate limit will reset, or null if the limit wasn’t hit>
- *   // possibly more in the future
- * }
- */
-function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
+function linkStacktrace(oauthToken, stackTrace, userOrRepo, callback) {
     var ret = "";
     var notFound = {};
     var ambiguous = {};
@@ -100,8 +92,5 @@ function linkStacktrace(oauthToken, stackTrace, userOrRepo) {
     if (ret.indexOf(footer) == -1)
         ret += footer;
     ret = ret.slice(0, -1); // remove last newline
-    return {
-        result: ret,
-        rateLimitReset: rateLimitReset
-    };
+    callback(ret, rateLimitReset);
 }

@@ -23,15 +23,16 @@
             userRepoInput.disabled = true;
             var list = document.getElementById('rateLimitError').classList;
             list.add('hidden');
-            var ret = linkStacktrace(token, stacktrace, userRepo);
-            stacktraceInput.value = ret.result;
-            stacktraceInput.disabled = false;
-            userRepoInput.disabled = false;
-            if(ret.rateLimitReset !== null) {
-                list.remove('hidden');
-                document.getElementById('rateLimitReset').textContent = ret.rateLimitReset.toLocaleTimeString();
-            }
-            stacktraceInput.select();
+            linkStacktrace(token, stacktrace, userRepo, function(result, rateLimitReset) {
+                stacktraceInput.value = result;
+                stacktraceInput.disabled = false;
+                userRepoInput.disabled = false;
+                if(rateLimitReset !== null) {
+                    list.remove('hidden');
+                    document.getElementById('rateLimitReset').textContent = rateLimitReset.toLocaleTimeString();
+                }
+                stacktraceInput.select();
+            });
         }
     }
     function validateUserRepo() {

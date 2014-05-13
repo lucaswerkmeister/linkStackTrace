@@ -34,11 +34,6 @@
             stacktraceInput.select();
         }
     }
-    function onKeypress(e) {
-        var code = e.keyCode || e.which;
-        if (code == '13')
-            onSubmit();
-    }
     function validateUserRepo() {
         var userRepoGroup = document.getElementById('userRepoGroup');
         userRepoGroup.classList.remove("has-success");
@@ -75,7 +70,7 @@
       </div>
       <div class="form-group" id="userRepoGroup">
         <label for="userRepo">User or repository</label>
-        <input id="userRepo" class="form-control" type="text" placeholder="user OR user/repo" onkeypress="onKeypress(event);" onkeyup="validateUserRepo();"/>
+        <input id="userRepo" class="form-control" type="text" placeholder="user OR user/repo" onkeyup="validateUserRepo();"/>
       </div>
       <div class="form-group bg-danger hidden" id="rateLimitError">
         <p>GitHub API rate limit exceeded! You’ll need a token of your own (get it <a href="https://github.com/settings/tokens/new">here</a>) or try again when the rate limit resets (at <span id="rateLimitReset">PLACEHOLDER</span>).</p>

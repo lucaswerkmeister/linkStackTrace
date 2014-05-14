@@ -69,9 +69,15 @@
         <label for="stackTrace">Stack trace</label>
         <textarea id="stackTrace" class="form-control" placeholder="Paste the stack trace here" rows="16"></textarea>
       </div>
-      <div class="form-group" id="userRepoGroup">
-        <label for="userRepo">User or repository</label>
-        <input id="userRepo" class="form-control" type="text" placeholder="user OR user/repo" onkeyup="validateUserRepo();"/>
+      <div class="row">
+        <div class="form-group col-md-6" id="userRepoGroup">
+          <label for="userRepo">User or repository</label>
+          <input id="userRepo" class="form-control" type="text" placeholder="user OR user/repo" onkeyup="validateUserRepo();"/>
+        </div>
+        <div class="form-group col-md-6" id="commitIshGroup">
+          <label for="commitIsh">Release tag or other commit-ish</label>
+          <input id="commitIsh" class="form-control" type="text" placeholder="Leave blank for latest version"/>
+        </div>
       </div>
       <div class="form-group bg-danger hidden" id="rateLimitError">
         <p>GitHub API rate limit exceeded! You’ll need a token of your own (get it <a href="https://github.com/settings/tokens/new">here</a>) or try again when the rate limit resets (at <span id="rateLimitReset">PLACEHOLDER</span>).</p>

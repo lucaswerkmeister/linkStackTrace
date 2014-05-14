@@ -13,6 +13,9 @@
         var stackTrace = stackTraceInput.value;
         var userRepoInput = document.getElementById('userRepo');
         var userRepo = userRepoInput.value;
+        var commitIsh = document.getElementById('commitIsh').value;
+        if (commitIsh === "")
+            commitIsh = null;
         var token = document.getElementById('authToken').value;
         if(userRepo.length == 0) {
             alert("You need to enter a user or repository in the user/repository field!");
@@ -23,7 +26,7 @@
             userRepoInput.disabled = true;
             var list = document.getElementById('rateLimitError').classList;
             list.add('hidden');
-            linkStackTrace(token, stackTrace, userRepo, function(result, rateLimitReset) {
+            linkStackTrace(token, stackTrace, userRepo, commitIsh, function(result, rateLimitReset) {
                 stackTraceInput.value = result;
                 stackTraceInput.disabled = false;
                 userRepoInput.disabled = false;

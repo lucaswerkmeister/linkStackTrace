@@ -1,4 +1,13 @@
-function linkStackTrace(oauthToken, stackTrace, userOrRepo, callback) {
+/*
+ * oauthToken: GitHub OAuth Token string
+ * stackTrace: stack trace string
+ * userOrRepo: GitHub user or user/repo string
+ * commitIsh: commit-ish string or null to keep GitHub’s SHA (latest commit on main branch that touched the file)
+ * callback: function(result, rateLimitReset), called when finished.
+ *           result is the linked stack trace,
+ *           rateLimitReset is the Date when the rate limit will reset, or null if the rate limit wasn’t hit.
+ */
+function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback) {
     var lines = stackTrace.split('\n');
     
     // [line format, file name, plain line]*

@@ -8,6 +8,12 @@
  *           rateLimitReset is the Date when the rate limit will reset, or null if the rate limit wasn’t hit.
  */
 function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback) {
+    function fixCommitIsh(url) {
+	if (commitIsh !== null)
+	    return url.replace(/[a-z0-9]{40}/, commitIsh);
+	return url;
+    }
+    
     var lines = stackTrace.split('\n');
     
     // [line format, file name, plain line]*
@@ -48,9 +54,9 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
     function cont() {
         if (++filesLength === filenames.length) {
             // that was the last search, continue with the rest of the function
-            var linkedLines = analyzedLines.map(function(line) {
+	    var linkedLines = analyzedLines.map(function(line) {
                 if (line[1] !== null && line[0] !== null && typeof(files[line[1]]) === "string") {
-                    return line[0].replace("\0file\0", files[line[1]]);
+                    return line[0].replace("\0file\0", fixCommitIsh(files[line[1]]));
                 } else {
                     return line[2];
                 }

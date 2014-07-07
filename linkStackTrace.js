@@ -43,8 +43,23 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
         userRepo = "repo:" + userOrRepo;
     else
         userRepo = "user:" + userOrRepo;
-    
-    var files = {}; // map from filename → URL
+
+    var files;
+    if (typeof(Map) === "undefined") {
+        files = (function() {
+            var ret = {};
+            ret.content = {};
+            ret.set = function(key, value) {
+                ret.content[key] = value;
+            };
+            ret.get = function(key, value) {
+                return ret.content[key];
+            };
+            return ret;
+        })();
+    } else {
+        files = new Map();
+    }
     var filesLength = 0;
     var notFound = {},
         ambiguous = {},
@@ -56,8 +71,8 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
         if (++filesLength === filenames.length) {
             // that was the last search, continue with the rest of the function
 	    var linkedLines = analyzedLines.map(function(line) {
-                if (line[1] !== null && line[0] !== null && typeof(files[line[1]]) === "string") {
-                    return line[0].replace("\0file\0", fixCommitIsh(files[line[1]]));
+                if (line[1] !== null && line[0] !== null && typeof(files.get(line[1])) === "string") {
+                    return line[0].replace("\0file\0", fixCommitIsh(files.get(line[1])));
                 } else {
                     return line[2];
                 }
@@ -86,7 +101,7 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
                     var response = JSON.parse(req.responseText);
                     if (response.total_count === 0) {
                         console.log("file " + filename + " not found");
-                        files[filename] = notFound;
+                        files.set(filename, notFound);
                         cont();
                         return;
                     } else if (response.total_count > 1) {
@@ -99,7 +114,7 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
                             // skip the return
                         } else {
                             console.log("file " + filename + " ambiguous between '" + response.items[0].path + "', '" + response.items[1].path + "' and possibly more");
-                            files[filename] = ambiguous;
+                            files.set(filename, ambiguous);
                             cont();
                             return;
                         }
@@ -108,22 +123,22 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
                     var match = response.items[0];
                     if (match.name != filename) {
                         console.log("file name " + match.name + " doesn’t match expected file name " + filename);
-                        files[filename] = nameMismatch;
+                        files.set(filename, nameMismatch);
                         cont();
                         return;
                     }
-                    files[filename] = match.html_url;
+                    files.set(filename, match.html_url);
                     cont();
                 } else if (req.status === 403) {
                     // rate limit hit
                     console.error("Rate limit hit!");
-                    files[filename] = rateLimitHit;
+                    files.set(filename, rateLimitHit);
                     rateLimitReset = new Date(req.getResponseHeader("X-RateLimit-Reset") * 1000);
                     cont();
                 } else {
                     console.error(req.status + ": " + req.statusText);
                     console.error(req.responseText);
-                    files[filename] = unknownError;
+                    files.set(filename, unknownError);
                     cont();
                 }
             }

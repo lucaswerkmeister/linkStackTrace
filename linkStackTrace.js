@@ -112,6 +112,12 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
                             // but we can drop it.
                             console.log("file " + filename + " yielded several results, but is still unambiguous");
                             // skip the return
+                        } else if (response.items[1].name == filename && response.items[0].name != filename) {
+                            // same case, except the second result is our match.
+                            // I’m not sure why GitHub would choose this order, but it happens.
+                            console.log("file " + filename + " yielded several results, but is still unambiguous");
+                            response.items[0] = response.items[1];
+                            // skip the return
                         } else {
                             console.log("file " + filename + " ambiguous between '" + response.items[0].path + "', '" + response.items[1].path + "' and possibly more");
                             files.set(filename, ambiguous);

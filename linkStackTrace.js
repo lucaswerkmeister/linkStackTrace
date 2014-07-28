@@ -108,7 +108,7 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
                         if (response.items[0].name == filename && response.items[1].name != filename) {
                             // looks ambiguous, but actually isn’t:
                             // the first match is what we want, and the second match is “valid” for GitHub
-                            // (for example, .../metamodel/Predicates.java matched Metamojel.java)
+                            // (for example, .../metamodel/Predicates.java matched Metamodel.java)
                             // but we can drop it.
                             console.log("file " + filename + " yielded several results, but is still unambiguous");
                             // skip the return

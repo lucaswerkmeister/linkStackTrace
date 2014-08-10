@@ -52,7 +52,7 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
             ret.set = function(key, value) {
                 ret.content[key] = value;
             };
-            ret.get = function(key, value) {
+            ret.get = function(key) {
                 return ret.content[key];
             };
             return ret;

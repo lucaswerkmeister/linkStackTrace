@@ -44,22 +44,7 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
     else
         userRepo = "user:" + userOrRepo;
 
-    var files;
-    if (typeof(Map) === "undefined") {
-        files = (function() {
-            var ret = {};
-            ret.content = {};
-            ret.set = function(key, value) {
-                ret.content[key] = value;
-            };
-            ret.get = function(key) {
-                return ret.content[key];
-            };
-            return ret;
-        })();
-    } else {
-        files = new Map();
-    }
+    var files = new Map();
     var filesLength = 0;
     var notFound = {},
         ambiguous = {},

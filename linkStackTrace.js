@@ -24,7 +24,7 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
     // in line format, \0file\0 is replaced with a URL to file name on GitHub
     var analyzedLines = lines.map(function(line) {
         var parsedLine = /^(.*)\((.*):(\d*)\)$/.exec(line);
-        if (parsedLine !== null && typeof(parsedLine[1] === "string") && typeof(parsedLine[2] === "string") && typeof(parsedLine[3] === "string")) {
+        if (parsedLine !== null && typeof parsedLine[1] === "string" && typeof parsedLine[2] === "string" && typeof parsedLine[3] === "string") {
             var before = parsedLine[1];
             var filename = parsedLine[2];
             var linenum = parsedLine[3];
@@ -59,7 +59,7 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
         if (++filesLength === filenames.length) {
             // that was the last search, continue with the rest of the function
             var linkedLines = analyzedLines.map(function(line) {
-                if (line[1] !== null && line[0] !== null && typeof(files.get(line[1])) === "string") {
+                if (line[1] !== null && line[0] !== null && typeof files.get(line[1]) === "string") {
                     return line[0].replace("\0file\0", fixCommitIsh(files.get(line[1])));
                 } else {
                     return line[2];

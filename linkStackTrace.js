@@ -80,7 +80,7 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
                  "q=" + filename + "+in:path+" + userRepo + "&" +
                  "per_page=2");
         req.setRequestHeader("Accept", "application/vnd.github.v3+json");
-        req.onload = function(e) {
+        req.onload = function() {
             if (req.readyState === 4) {
                 if (req.status === 200) {
                     var response = JSON.parse(req.responseText);

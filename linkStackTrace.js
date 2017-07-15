@@ -1,4 +1,7 @@
 "use strict";
+
+/* exported linkStackTrace */
+
 /*
  * oauthToken: GitHub OAuth Token string
  * stackTrace: stack trace string

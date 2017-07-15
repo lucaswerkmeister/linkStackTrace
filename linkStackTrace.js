@@ -78,7 +78,7 @@ function linkStackTrace(oauthToken, stackTrace, userOrRepo, commitIsh, callback)
     }
     filenames.forEach(function(filename) {
         var req = new XMLHttpRequest();
-        req.open("GET", "https://api.github.com/search/code?" + 
+        req.open("GET", "https://api.github.com/search/code?" +
                  "access_token=" + oauthToken + "&" +
                  "q=" + filename + "+in:path+" + userRepo + "&" +
                  "per_page=2");
